@@ -8,7 +8,7 @@ python3 main.py \
 --dest $dest \
 --ehr mimiciii \
 --first_icu \
---data $data/mimiciii-1.4/ \
+--data $data/mimiciii/ \
 --readmission --mortality --los_3day --los_7day --long_term_mortality \
 --final_acuity --imminent_discharge --diagnosis --creatinine --bilirubin --platelets --wbc \
 --emb_type textbase --feature "all_features" \

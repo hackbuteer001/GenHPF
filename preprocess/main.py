@@ -2,6 +2,15 @@ import os
 import sys
 import logging
 import argparse
+# os.environ["JAVA_HOME"] = "/usr/local/java/jdk1.8.0_361/jre/bin/java"
+# os.environ["SPARK_HOME"] = "/home/caoyu/anaconda3/envs/torch_1.9.1/lib/python3.9/site-packages"
+os.environ["PYSPARK_PYTHON"] = "/home/caoyu/anaconda3/envs/torch_1.9.1/bin/python"
+os.environ["PYSPARK_DRIVER_PYTHON"] = "/home/caoyu/anaconda3/envs/torch_1.9.1/bin/python"
+os.environ["PYSPARK_SUBMIT_ARGS"] = "--master local[*] pyspark-shell"
+
+import findspark
+findspark.init()
+
 from pyspark.sql import SparkSession
 
 from ehrs import EHR_REGISTRY
@@ -214,9 +223,13 @@ def main(args):
         os.makedirs(args.dest)
 
     ehr = EHR_REGISTRY[args.ehr](args)
-    
+
+    # spark = SparkSession.builder.config("spark.driver.host", "localhost").getOrCreate()
+
     spark = (
         SparkSession.builder.master(f"local[{args.num_threads}]")
+        # SparkSession.builder.master("local[1]")
+        .config("spark.driver.host", "localhost")
         .config("spark.driver.memory", "100g")
         .config("spark.driver.maxResultSize", "10g")
         .config("spark.network.timeout", "100s")
@@ -224,6 +237,7 @@ def main(args):
         .getOrCreate()
     )
     ehr.run_pipeline(spark)
+    # ehr.run_pipeline()
 
 if __name__ == "__main__":
     parser = get_parser()

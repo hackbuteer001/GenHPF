@@ -202,6 +202,7 @@ class EHR(object):
         icustays.sort_values([self.hadm_key, self.icustay_key], inplace=True)
         
         if self.readmission:
+            icustays['INTIME'] = icustays['INTIME'].astype('datetime64[s]')
             icustays["readmission"] = 1
             icustays.loc[
                 icustays.groupby(self.hadm_key)[self.determine_first_icu].idxmax(),

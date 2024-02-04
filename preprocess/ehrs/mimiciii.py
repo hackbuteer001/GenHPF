@@ -443,8 +443,8 @@ class MIMICIII(EHR):
 
         icustays.rename(columns={"DISCHARGE_LOCATION": "HOS_DISCHARGE_LOCATION"}, inplace=True)
 
-        icustays["DISCHTIME"] = (icustays["DISCHTIME"] - icustays["INTIME"]).dt.total_seconds() // 60
-        icustays["OUTTIME"] = (icustays["OUTTIME"] - icustays["INTIME"]).dt.total_seconds() // 60
+        icustays["DISCHTIME"] = (icustays["DISCHTIME"] - pd.to_datetime(icustays["INTIME"])).dt.total_seconds() // 60
+        icustays["OUTTIME"] = (pd.to_datetime(icustays["OUTTIME"]) - pd.to_datetime(icustays["INTIME"])).dt.total_seconds() // 60
         return icustays
 
 
