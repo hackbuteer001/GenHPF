@@ -2,7 +2,11 @@ device_num=$1
 world_size=$2
 train_src=$3
 batch_size=$4
-seed=$5
+
+#echo $1
+#echo $2
+#echo $3
+#echo $4
 
 OMP_NUM_THREADS=16 \
 CUDA_VISIBLE_DEVICES=$device_num \

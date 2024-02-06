@@ -18,6 +18,13 @@ from torch.utils.data import DataLoader, DistributedSampler
 import torch
 from loggings.meters import safe_round
 
+os.environ["PYSPARK_PYTHON"] = "/home/caoyu/anaconda3/envs/torch_1.9.1/bin/python"
+os.environ["PYSPARK_DRIVER_PYTHON"] = "/home/caoyu/anaconda3/envs/torch_1.9.1/bin/python"
+os.environ["PYSPARK_SUBMIT_ARGS"] = "--master local[*] pyspark-shell"
+
+import findspark
+findspark.init()
+
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s %(name)s %(message)s)))",
     datefmt="%Y-%m-%d %H:%M:%S",
@@ -37,7 +44,7 @@ import criterions
 
 def get_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_path', type=str, default='/nfs_edlab/ghhur/GenHPF/input12hr/')
+    parser.add_argument('--input_path', type=str, default='/home/caoyu/data/')
     parser.add_argument('--save_dir', type=str, default='checkpoints')
     parser.add_argument('--save_prefix', type=str, default='checkpoint')
 
@@ -777,8 +784,12 @@ def set_struct(cfg: dict):
     logging.config.dictConfig(job_logging_cfg)
 
     cfg_dir = "config"
-    os.mkdir(cfg_dir)
-    os.mkdir(cfg['save_dir'])
+    print("cfg_dir,"+cfg_dir)
+    if not os.path.exists(cfg_dir):
+        os.mkdir(cfg_dir)
+    print("save_dir," + cfg['save_dir'])
+    if not os.path.exists(cfg['save_dir']):
+        os.mkdir(cfg['save_dir'])
 
     with open(os.path.join(cfg_dir, "config.yaml"), "w") as f:
         for k, v in cfg.items():

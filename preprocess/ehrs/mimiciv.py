@@ -346,6 +346,9 @@ class MIMICIV(EHR):
         )
 
         icustays = icustays.merge(patients, on="subject_id", how="left")
+        icustays["INTIME"] = pd.to_datetime(icustays["INTIME"])
+
+
         icustays["AGE"] = (
             icustays["INTIME"].dt.year
             - icustays["anchor_year"]
@@ -364,6 +367,8 @@ class MIMICIV(EHR):
         icustays["DISCHTIME"] = pd.to_datetime(
             icustays["DISCHTIME"], infer_datetime_format=True
         )
+        icustays["DISCHTIME"] = pd.to_datetime(icustays["DISCHTIME"])
+        icustays["OUTTIME"] = pd.to_datetime(icustays["OUTTIME"])
 
         icustays["IN_ICU_MORTALITY"] = (
             (icustays["INTIME"] < icustays["DISCHTIME"])
@@ -526,13 +531,13 @@ class MIMICIV(EHR):
     
     def infer_data_extension(self) -> str:
         if (
-            len(glob.glob(os.path.join(self.data_dir, "hosp", "*.csv.gz"))) == 21
-            or len(glob.glob(os.path.join(self.data_dir, "icu", "*.csv.gz"))) == 8
+            len(glob.glob(os.path.join(self.data_dir, "hosp", "*.csv.gz"))) == 22
+            or len(glob.glob(os.path.join(self.data_dir, "icu", "*.csv.gz"))) == 9
         ):
             ext = ".csv.gz"
         elif (
-            len(glob.glob(os.path.join(self.data_dir, "hosp", "*.csv")))==21
-            or len(glob.glob(os.path.join(self.data_dir, "icu", "*.csv")))==8
+            len(glob.glob(os.path.join(self.data_dir, "hosp", "*.csv")))==22
+            or len(glob.glob(os.path.join(self.data_dir, "icu", "*.csv")))==9
         ):
             ext = ".csv"
         else:

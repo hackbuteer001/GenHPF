@@ -32,6 +32,6 @@ def import_ehrs(ehrs_dir, namespace):
 
 
 # automatically import any Python files in the ehrs/ directory
-print(os.path.abspath(__file__))
+# print(os.path.abspath(__file__))
 ehrs_dir = os.path.dirname(__file__)
 import_ehrs(ehrs_dir, "ehrs")
